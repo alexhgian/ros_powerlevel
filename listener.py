@@ -42,12 +42,13 @@ from std_msgs.msg import Int64
 import serial
 import time
 
+ser = None
+
 def callback(data):
     #rospy.loginfo(rospy.get_caller_id() + "Powerlevel %s", data.data)
     rospy.loginfo(rospy.get_caller_id() + "Powerlevel %s", data.data)
-    ser.write(str(data.data).encode()+'\n')
+    ser.write(str(data.data).encode()+'!')
     rospy.Rate(10).sleep()
-
 def listener():
 
     # In ROS, nodes are uniquely named. If two nodes with the same
@@ -65,8 +66,10 @@ def listener():
 if __name__ == '__main__':
     for i in range(0,50):
         try:
-            ser = serial.Serial('/dev/ttyACM'+str(i), 9600)
-            print 'Success Connect to/dev/ttyACM' + str(i) 
+            ser = serial.Serial('/dev/ttyACM'+str(i), 9600, timeout=1)
+            print 'Success Connect to ' + ser.name + "!"
+            time.sleep(2)
+            ser.write('10!')
             success = True
             break
         except:
